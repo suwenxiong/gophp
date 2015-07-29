@@ -7,7 +7,6 @@
  */
 
 $config = array(
-    'gz' => false,
     'title'=>'web',
 
 );

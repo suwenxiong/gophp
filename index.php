@@ -5,21 +5,33 @@
  * Date: 15-7-29
  * Time: 上午10:46
  */
+
+define('PATH', dirname(__FILE__).'/');
+
 define('VIEW_LIST', '_view_list');
-define('PATH_VIEWS', 'views/');
-define('PATH_CONFIG', 'config/');
-define('PATH_LAYOUT', 'layout/');
-define('PATH_WEB', 'web/');
+define('PATH_VIEWS', PATH.'views/');
+define('PATH_CONFIG', PATH.'config/');
+define('PATH_LAYOUT', PATH.'layout/');
+define('PATH_WEB', PATH.'web/');
+define('PATH_CACHE', PATH.'cache/');
 
 require PATH_CONFIG.'common.php';
 
 $router = isset($_GET['r'])&&$_GET['r'] ? $_GET['r'] : '_view_list';
+
 if(!preg_match('/^[a-z0-9_-]*[\/]*[a-z0-9_-]*$/i', $router)){
     showMessage('bad request');
     return;
 }
 if($router == VIEW_LIST){
+    $files = getDir(PATH_VIEWS, 'html');
+    echo "<body><div id='main'></div>";
+    foreach ($files as $f) {
+        $f = substr($f, 0, strpos($f, ".html"));
 
+        echo "<script src=\"index.php?r={$f}\" type='template/text'>alert(1)</script>";
+    }
+    echo "</body>";
 }else{
     $file = PATH_VIEWS.$router.".html";
     if(is_file($file)){
@@ -29,13 +41,20 @@ if($router == VIEW_LIST){
         $content = template(ob_get_contents());
         ob_end_clean();
         $content = preg_replace("/---[\\d\\D]*?---/", '', $content ,1);
-        file_put_contents('cache/'.$router, $content);
+        file_put_contents(PATH_CACHE.md5($router), $content);
         ob_start();
-        include 'cache/'.$router;
+        include PATH_CACHE.md5($router);
         $content = ob_get_contents();
 
 
         ob_end_clean();
+
+        $file = PATH_WEB.'/'.$router.'.html';
+        $filepath = dirname($file);
+        if(!is_dir($filepath)){
+            mkdir($filepath, 0777, true);
+        }
+
         file_put_contents(PATH_WEB.'/'.$router.'.html', $content);
         echo $content;
 
@@ -85,8 +104,35 @@ function loadConfig($file){
     return $var;
 }
 
-
+function searchDir($path,&$data, $prefix = false){
+    if(is_dir($path)){
+        $dp=dir($path);
+        while($file=$dp->read()){
+            if($file!='.'&& $file!='..'){
+                searchDir($path.'/'.$file,$data, $prefix);
+            }
+        }
+        $dp->close();
+    }
+    if(is_file($path)){
+        $file = substr($path, strlen(PATH_VIEWS) + 1);
+        if($prefix !== false && strpos($path, $prefix)!== false){
+            $data[]=$file;
+        }else{
+            $data[]=$file;
+        }
+    }
+}
+function getDir($dir, $prefix = false){
+    $data=array();
+    searchDir($dir,$data, $prefix);
+    return   $data;
+}
 
 function showMessage($str){
     echo $str;
+}
+
+function table(){
+    $str 
 }
