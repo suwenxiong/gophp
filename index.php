@@ -5,7 +5,7 @@
  * Date: 15-7-29
  * Time: 上午10:46
  */
-
+error_reporting(E_ALL^E_NOTICE);
 define('PATH', dirname(__FILE__).'/');
 
 define('VIEW_LIST', '_view_list');
