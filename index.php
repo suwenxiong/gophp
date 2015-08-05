@@ -15,8 +15,7 @@ define('PATH_LAYOUT', PATH.'layout/');
 define('PATH_WEB', PATH.'web/');
 define('PATH_CACHE', PATH.'cache/');
 
-require PATH_CONFIG.'common.php';
-
+require(PATH_CONFIG.'common.php');
 $router = isset($_GET['r'])&&$_GET['r'] ? $_GET['r'] : '_view_list';
 
 if(!preg_match('/^[a-z0-9_-]*[\/]*[a-z0-9_-]*$/i', $router)){
@@ -158,3 +157,23 @@ function showMessage($str){
     echo $str;
 }
 
+function post($url, $postData = null){
+    $ch = curl_init();
+    if(stripos($url,"https://")!==FALSE){
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+    }
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch,CURLOPT_POST, 1);//POST方式
+    curl_setopt($ch,CURLOPT_POSTFIELDS, $postData);//POST数据
+    $res = curl_exec($ch);
+    curl_close($ch);
+    return $res;
+}
+
+function get($url){
+    return file_get_contents($url);
+}

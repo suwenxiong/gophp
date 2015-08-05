@@ -2,11 +2,10 @@
 /**
  * Created by PhpStorm.
  * User: sean
- * Date: 15-7-29
- * Time: 下午2:29
+ * Date: 15-8-5
+ * Time: 下午6:07
  */
-
-$config = array(
-    'title'=>'web',
-
-);
+$config = [
+    'title' => 'hello world',
+    'info' => get('https://www.baidu.com')
+];
