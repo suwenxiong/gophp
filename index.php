@@ -23,16 +23,40 @@ if(!preg_match('/^[a-z0-9_-]*[\/]*[a-z0-9_-]*$/i', $router)){
     showMessage('bad request');
     return;
 }
+function html($data){
+    return  <<<EOF
+    <html>
+    <body>
+    <div id="main">
+
+    </div>
+    <script src="/lib/jquery.js"></script>
+    <script>
+    var data = $data;
+
+    function compile(url){\$.get('/index.php?r='+url, function (r){
+        \$('#main').append('<p>compile <a href="/web/'+url+'.html">web/'+url+'.html</a>,success</p>')
+        })}
+    for (index in data){
+        compile(data[index])
+    }
+    </script>
+
+    </body>
+    </html>
+
+EOF;
+}
+
+
 if($router == VIEW_LIST){
     $files = getDir(PATH_VIEWS, 'html');
-    echo "<body><div id='main'></div>";
+    $data = [];
     foreach ($files as $f) {
-        $f = substr($f, 0, strpos($f, ".html"));
-
-        echo "<script src=\"index.php?r={$f}\" type='template/text'></script>";
-        echo "<script>window.onload=function(){document.getElementById('main').innerHTML=('All template file are updated')}</script>";
+        $data[] = substr($f, 0, strpos($f, ".html"));
     }
-    echo "</body>";
+    $data = json_encode($data);
+    echo html($data);
 }else{
     $file = PATH_VIEWS.$router.".html";
     if(is_file($file)){
