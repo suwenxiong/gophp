@@ -10,10 +10,10 @@ chmod 777 -R gophp/*
 `
 cache 是编译面板文件缓存目录
 config 配置文件目录
-layout 布局文件目录
+layout 布局文件目录  
 views 是模板文件目录
 web   是编译目录
-index.php 核心文件  
+index.php 核心文件
 `
 #3.基本使用方法
 `
