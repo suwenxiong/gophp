@@ -29,7 +29,8 @@ if($router == VIEW_LIST){
     foreach ($files as $f) {
         $f = substr($f, 0, strpos($f, ".html"));
 
-        echo "<script src=\"index.php?r={$f}\" type='template/text'>alert(1)</script>";
+        echo "<script src=\"index.php?r={$f}\" type='template/text'></script>";
+        echo "<script>window.onload=function(){document.getElementById('main').innerHTML=('All template file are updated')}</script>";
     }
     echo "</body>";
 }else{
@@ -133,6 +134,3 @@ function showMessage($str){
     echo $str;
 }
 
-function table(){
-    $str 
-}
