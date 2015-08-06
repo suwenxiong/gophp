@@ -16,7 +16,7 @@ layout 布局文件目录
 
 views 是模板文件目录
 
-web   是编译目录
+web   是编译目录,程序会自动把views目录下模板文件编译到web目录下
 
 index.php 核心文件
 
@@ -27,6 +27,10 @@ index.php 核心文件
 在浏览器执行 127.0.0.1/gophp/?r=index
 
 会编译生成web/index.html,并且在当前窗口可以浏览到网页内容
+
+在浏览器执行127.0.0.1/gophp/
+
+会刷新所有的模板文件
 
 
 #4.布局文件调用
@@ -48,6 +52,19 @@ for example:
 
 在模板{$config[title]}
 
+配置文件还可以请求url获取数据，例如
+
+$config = [
+    'title' => 'hello world',
+    'info' => get('https://www.baidu.com')
+];
+
+有两种请求方式，一种是get,一种是post
+
+get函数使用非常简单，参数就是url
+
+post函数第一个参数是url字符串,第二个参数是请求参数数组，例如 'info'=>post('http://www.baidu.com', ['s'=>'kk'])
+
 #6.模板自定义变量方法
 
 在每个模板开始，可以加入---  ---,符号里面的内容会被解析
@@ -61,7 +78,14 @@ title=haha
 Notice:---前不能有任何内容
 
 
-#7.在面板可以使用php语法
+#7.模板引擎
+现有的模板引擎只能解析
+
+{layout html}
+
+{$var}
+
+如果你熟悉php，完全可以使用php
 
 <?php if($i==0){?>
 
